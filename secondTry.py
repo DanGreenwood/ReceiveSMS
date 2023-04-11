@@ -1,17 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 app = Flask(__name__)
 
-@app.route('/sms', methods=['POST'])
-def receive_data():
-    try:
-        data = request.get_json(force=True)
-        # Do something with the JSON data here
-        print(data)
-        return jsonify({'success': True}), 200
-    except:
-        # Handle JSON decoding errors here
-        return jsonify({'error': 'JSON decoding error'}), 400
+@app.route('/json', methods=['POST'])
+def handle_request():
+    if request.headers['Content-Type'] == 'application/json':
+        json_data = request.json
+        print(json_data)
+        return 'JSON posted'
+    else:
+        return 'Unsupported Media Type', 415
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='0.0.0.0', port=5000)
